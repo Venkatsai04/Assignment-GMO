@@ -1,25 +1,27 @@
-
-// import React, { useState, useEffect } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 
-
-function Page({data}) {
+const Page = ({ data }) => {
     
-
     console.log(data);
-    
-
+        
     return (
-        <div className="card">
-            <DataTable value={data} tableStyle={{ minWidth: '50rem' }}>
-                <Column field="code" header="Code"></Column>
-                <Column field="name" header="Name"></Column>
-                <Column field="category" header="Category"></Column>
-                <Column field="quantity" header="Quantity"></Column>
+        <div>
+            {/* Fields: title, place_of_origin, artist_display, inscriptions, date_start, date_end */}
+            <DataTable 
+                value={data} 
+                tableStyle={{ minWidth: '50rem' }}
+
+            >
+                <Column field="title" header="Title" ></Column>
+                <Column field="place_of_origin" header="Place of Origin" ></Column>
+                <Column field="artist_display" header="Artist" ></Column>
+                <Column field="inscriptions" header="Inscriptions"></Column>
+                <Column field="date_start" header="Start Date" ></Column>
+                <Column field="date_end" header="End Date" ></Column>
             </DataTable>
         </div>
-    );
+    )
 }
 
 export default Page
