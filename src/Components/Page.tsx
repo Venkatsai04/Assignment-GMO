@@ -3,25 +3,43 @@ import { Column } from "primereact/column";
 import { useState } from "react";
 
 const Page = ({ data }) => {
-    const [selectedRows, setSelectedRows] = useState([]);
-    const [rowClick, setRowClick] = useState(true);
+  const [selectedRows, setSelectedRows] = useState([]);
 
-    return (
-        <div>
-            {/* Fields: title, place_of_origin, artist_display, inscriptions, date_start, date_end */}
+  return (
+    <div>
+      <DataTable
+        value={data}
+        tableStyle={{ minWidth: "50rem" }}
+        selection={selectedRows}
+        onSelectionChange={(e) => setSelectedRows(e.value)}
+      >
+        <Column selectionMode="multiple" headerStyle={{ width: "3rem" }} />
 
-            <DataTable value={data} selectionMode={rowClick ? undefined : 'multiple'}  tableStyle={{ minWidth: '50rem' }}>
-                <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
-
-                <Column field="title" header="Title" className="p-0 border-b" />
-                <Column field="place_of_origin" header="Place of Origin" className="p-0 border-b" />
-                <Column field="artist_display" header="Artist" className="p-0 border-b" />
-                <Column field="inscriptions" header="Inscriptions" className="p-0 border-b" />
-                <Column field="date_start" header="Start Date" className="p-0 border-b" />
-                <Column field="date_end" header="End Date" className="p-0 border-b" />
-            </DataTable>
-        </div>
-    );
+        <Column field="title" header="Title" className=" border-b" />
+        <Column
+          field="place_of_origin"
+          header="Place of Origin"
+          className=" border-b"
+        />
+        <Column
+          field="artist_display"
+          header="Artist"
+          className=" border-b"
+        />
+        <Column
+          field="inscriptions"
+          header="Inscriptions"
+          className=" border-b"
+        />
+        <Column
+          field="date_start"
+          header="Start Date"
+          className=" border-b"
+        />
+        <Column field="date_end" header="End Date" className=" border-b" />
+      </DataTable>
+    </div>
+  );
 };
 
 export default Page;
