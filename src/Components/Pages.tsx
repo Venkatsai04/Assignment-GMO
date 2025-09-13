@@ -1,28 +1,19 @@
 import { useState, useEffect } from "react";
-import Page from "./Page";
-
-type Artwork = {
-  id: number;
-  title: string;
-  place_of_origin: string;
-  artist_display: string;
-  inscriptions: string;
-  date_start: string;
-  date_end: string;
-};
+import Page, { type Artwork } from "./Page";
 
 const Pages = () => {
   const [data, setData] = useState<Artwork[]>([]);
-  const [currentPage, setCurrentPage] = useState(1); 
-  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(10);
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
   const [loading, setLoading] = useState(false);
 
+ 
   const fetchData = async (page: number) => {
     setLoading(true);
     try {
       const res = await fetch(
-        `https://api.artic.edu/api/v1/artworks?page=${page}`
+        `https://api.artic.edu/api/v1/artworks?page=${page}&limit=10`
       );
       const json = await res.json();
       setData(json.data);
@@ -34,45 +25,16 @@ const Pages = () => {
 
   useEffect(() => {
     fetchData(currentPage);
+    window.addEventListener("beforeunload", () => {
+      localStorage.removeItem("rowsLeftToSelect");
+    });
   }, [currentPage]);
 
+
   const goToPage = (page: number) => {
-    if (page < 1) {
-      setCurrentPage(totalPages); 
-    } else if (page > totalPages) {
-      setCurrentPage(1); 
-    } else {
-      setCurrentPage(page);
-    }
-  };
-
-
-  const renderPageNumbers = () => {
-    const pages = [];
-    const maxVisible = 5; 
-    let start = Math.max(1, currentPage - 2);
-    let end = Math.min(totalPages, start + maxVisible - 1);
-
-    if (end - start < maxVisible - 1) {
-      start = Math.max(1, end - maxVisible + 1);
-    }
-
-    for (let i = start; i <= end; i++) {
-      pages.push(
-        <button
-          key={i}
-          onClick={() => goToPage(i)}
-          className={`px-3 py-1 border rounded ${
-            i === currentPage
-              ? "bg-indigo-500 text-white"
-              : "hover:bg-gray-200"
-          }`}
-        >
-          {i}
-        </button>
-      );
-    }
-    return pages;
+    if (page < 1) setCurrentPage(totalPages);
+    else if (page > totalPages) setCurrentPage(1);
+    else setCurrentPage(page);
   };
 
   return (
@@ -86,7 +48,6 @@ const Pages = () => {
         />
       </div>
 
-      {/* circular pagination */}
       <div className="flex space-x-2">
         <button
           onClick={() => goToPage(currentPage - 1)}
@@ -95,7 +56,17 @@ const Pages = () => {
           Prev
         </button>
 
-        {renderPageNumbers()}
+        {Array.from({ length: Math.min(totalPages, 20) }, (_, i) => i + 1).map((page) => (
+          <button
+            key={page}
+            onClick={() => goToPage(page)}
+            className={`px-3 py-1 border rounded ${
+              page === currentPage ? "bg-indigo-500 text-white" : "hover:bg-gray-200"
+            }`}
+          >
+            {page}
+          </button>
+        ))}
 
         <button
           onClick={() => goToPage(currentPage + 1)}
@@ -103,20 +74,6 @@ const Pages = () => {
         >
           Next
         </button>
-      </div>
-
-      {/* selection panel */}
-      <div className="mt-6 p-4 border rounded bg-gray-50 w-full">
-        <h3 className="font-semibold mb-2">Selected Rows:</h3>
-        {selectedIds.size === 0 ? (
-          <p className="text-gray-500">No rows selected</p>
-        ) : (
-          <ul className="list-disc pl-6">
-            {Array.from(selectedIds).map((id) => (
-              <li key={id}>Artwork ID: {id}</li>
-            ))}
-          </ul>
-        )}
       </div>
     </div>
   );

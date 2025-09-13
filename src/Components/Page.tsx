@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 
-type Artwork = {
+export type Artwork = {
   id: number;
   title: string;
   place_of_origin: string;
@@ -23,7 +23,9 @@ const Page = ({ data, loading, selectedIds, setSelectedIds }: Props) => {
   const [showBox, setShowBox] = useState(false);
   const [count, setCount] = useState<number | "">("");
 
+
   const selectedRows = data.filter((row) => selectedIds.has(row.id));
+
 
   const handleSelection = (e: { value: Artwork[] }) => {
     const newSet = new Set(selectedIds);
@@ -31,6 +33,7 @@ const Page = ({ data, loading, selectedIds, setSelectedIds }: Props) => {
     e.value.forEach((row) => newSet.add(row.id));
     setSelectedIds(newSet);
   };
+
 
   const applyBulkSelect = () => {
     if (count === "" || count <= 0) return;
@@ -49,8 +52,12 @@ const Page = ({ data, loading, selectedIds, setSelectedIds }: Props) => {
     setCount("");
   };
 
+
   useEffect(() => {
-    const rowsLeft = parseInt(localStorage.getItem("rowsLeftToSelect") || "0", 10);
+    const rowsLeft = parseInt(
+      localStorage.getItem("rowsLeftToSelect") || "0",
+      10
+    );
     if (rowsLeft > 0) {
       let updated = new Set(selectedIds);
       let left = rowsLeft;
@@ -64,6 +71,7 @@ const Page = ({ data, loading, selectedIds, setSelectedIds }: Props) => {
       localStorage.setItem("rowsLeftToSelect", left.toString());
     }
   }, [data]);
+
 
   const renderHeader = () => (
     <div className="flex items-center gap-2 relative">
@@ -97,26 +105,28 @@ const Page = ({ data, loading, selectedIds, setSelectedIds }: Props) => {
     </div>
   );
 
+  const columns = [
+    { field: "title", header: "Title" },
+    { field: "place_of_origin", header: "Place of Origin" },
+    { field: "artist_display", header: "Artist" },
+    { field: "inscriptions", header: "Inscriptions" },
+    { field: "date_start", header: "Start Date" },
+    { field: "date_end", header: "End Date" },
+  ];
+
   return (
-    <DataTable
+    <DataTable<Artwork>
       value={data}
       loading={loading}
       selection={selectedRows}
       onSelectionChange={handleSelection}
-      tableStyle={{ minWidth: "50rem" }}
       dataKey="id"
+      tableStyle={{ minWidth: "50rem" }}
     >
-      <Column
-        selectionMode="multiple"
-        header={renderHeader}
-        headerStyle={{ width: "5rem" }}
-      />
-      <Column field="title" header="Title" className="border-b" />
-      <Column field="place_of_origin" header="Place of Origin" className="border-b" />
-      <Column field="artist_display" header="Artist" className="border-b" />
-      <Column field="inscriptions" header="Inscriptions" className="border-b" />
-      <Column field="date_start" header="Start Date" className="border-b" />
-      <Column field="date_end" header="End Date" className="border-b" />
+      <Column selectionMode="multiple" header={renderHeader} headerStyle={{ width: "5rem" }} />
+      {columns.map((col) => (
+        <Column key={col.field} field={col.field} header={col.header} />
+      ))}
     </DataTable>
   );
 };
