@@ -88,7 +88,7 @@ const Page = ({ data, loading, selectedIds, setSelectedIds }: Props) => {
           />
           <button
             onClick={applyBulkSelect}
-            className="bg-indigo-500 text-white px-3 py-1 rounded"
+            className="bg-gray-500 text-white px-3 py-1 rounded mt-2"
           >
             Select
           </button>
