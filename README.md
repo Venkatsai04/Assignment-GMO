@@ -1,6 +1,6 @@
 Grow Me Organic – React Assignment
 
-Live - [text](https://assignment-gmo.netlify.app)
+Live - [link](https://assignment-gmo.netlify.app)
 
 This project is my submission for the Grow Me Organic React assignment.
 It implements a server-side paginated data table using React + PrimeReact, showing artwork data from the API.
