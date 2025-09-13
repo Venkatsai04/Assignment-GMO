@@ -2,6 +2,7 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { useState } from "react";
 
+
 const Page = ({ data }) => {
   const [selectedRows, setSelectedRows] = useState([]);
 
@@ -12,6 +13,7 @@ const Page = ({ data }) => {
         tableStyle={{ minWidth: "50rem" }}
         selection={selectedRows}
         onSelectionChange={(e) => setSelectedRows(e.value)}
+        
       >
         <Column selectionMode="multiple" headerStyle={{ width: "3rem" }} />
 
