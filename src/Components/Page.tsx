@@ -23,18 +23,16 @@ const Page = ({ data, loading, selectedIds, setSelectedIds }: Props) => {
   const [showBox, setShowBox] = useState(false);
   const [count, setCount] = useState<number | "">("");
 
-
+  // Rows currently selected on this page
   const selectedRows = data.filter((row) => selectedIds.has(row.id));
-
-
+  
   const handleSelection = (e: { value: Artwork[] }) => {
     const newSet = new Set(selectedIds);
     data.forEach((row) => newSet.delete(row.id));
     e.value.forEach((row) => newSet.add(row.id));
     setSelectedIds(newSet);
   };
-
-
+  
   const applyBulkSelect = () => {
     if (count === "" || count <= 0) return;
 
@@ -51,8 +49,7 @@ const Page = ({ data, loading, selectedIds, setSelectedIds }: Props) => {
     setShowBox(false);
     setCount("");
   };
-
-
+  
   useEffect(() => {
     const rowsLeft = parseInt(
       localStorage.getItem("rowsLeftToSelect") || "0",
@@ -71,8 +68,7 @@ const Page = ({ data, loading, selectedIds, setSelectedIds }: Props) => {
       localStorage.setItem("rowsLeftToSelect", left.toString());
     }
   }, [data]);
-
-
+  
   const renderHeader = () => (
     <div className="flex items-center gap-2 relative">
       <span>Select</span>
@@ -115,7 +111,7 @@ const Page = ({ data, loading, selectedIds, setSelectedIds }: Props) => {
   ];
 
   return (
-    <DataTable<Artwork>
+    <DataTable
       value={data}
       loading={loading}
       selection={selectedRows}
